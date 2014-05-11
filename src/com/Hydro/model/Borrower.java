@@ -1,10 +1,10 @@
 package com.Hydro.model;
+
 /**
- * 借款信息
- * 实现Comparable排序接口
+ * 借款信息 实现Comparable排序接口
  */
 public class Borrower implements Comparable<Borrower> {
-	private String borrId;// 借款人 
+	private String borrId;// 借款人
 	private String deptId;// 所属部门
 	private String borrDate;// 借款日期
 	private String purpose;// 借款用途
@@ -16,7 +16,7 @@ public class Borrower implements Comparable<Borrower> {
 	public String getBorrId() {
 		return borrId;
 	}
- 
+
 	public void setBorrId(String borrId) {
 		this.borrId = borrId;
 	}
@@ -83,8 +83,8 @@ public class Borrower implements Comparable<Borrower> {
 
 	public String toString() {
 
-		return this.getBorrId() + ",  deptId:" + this.getDeptId() + ", BorrDate:" + this.getBorrDate() + ",  Purpose:" + this.getPurpose() + ",  originalCurrency:" + this.getOriginalCurrency()
-				+ ",  verification:" + this.getVerification() + ",  originalCurrencyBalance:" + this.getOriginalCurrencyBalance() + ",  aging:" + this.getAging();
+		return this.getBorrId() + ",  deptId:" + this.getDeptId() + ", BorrDate:" + this.getBorrDate() + ",  Purpose:" + this.getPurpose() + ",  originalCurrency:" + this.getOriginalCurrency() + ",  verification:" + this.getVerification() + ",  originalCurrencyBalance:"
+				+ this.getOriginalCurrencyBalance() + ",  aging:" + this.getAging();
 	}
 
 }
