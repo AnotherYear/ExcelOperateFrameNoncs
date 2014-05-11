@@ -155,7 +155,6 @@ public class ReportServicedept implements ReportServiceInterface {
 			HSSFSheet sheet = workbook.getSheetAt(0);// 获取第一个sheet表
 			HSSFRow row = sheet.getRow(1);// 获取sheet表第二行
 			HSSFCell deptCell = row.getCell(1);// 获取第二行的第二个单元格
-			System.out.println(deptCell);
 			deptCell.setCellValue(deptid);// 将第二行第二个单元格值填充为“部门名称”
 			deptCell.setCellStyle(cellStyle.cellFontBoldCenterNoBorderStyle);
 
