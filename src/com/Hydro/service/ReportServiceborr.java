@@ -27,9 +27,9 @@ public class ReportServiceborr implements ReportServiceInterface {
 
 	public ArrayList<Borrower> borrList = new ArrayList<Borrower>();// 所有借款人
 	public double[] total = { 0.0, 0.0, 0.0 };
-
 	public CellStyle cellStyle;
 	public ExcelUtils excelUtils;
+	int purposeColLength = 0;// 中文列字符串长度
 
 	@Override
 	public void readExcel(String fname) throws Exception {
@@ -116,8 +116,9 @@ public class ReportServiceborr implements ReportServiceInterface {
 
 		// 自动调节每列宽度
 		for (int i = 0; i < 10; i++) {
-			sheet.autoSizeColumn(i);
+			sheet.autoSizeColumn((short) i);
 		}
+		sheet.setColumnWidth(2, purposeColLength * 2 * 256);// 设置借款用途列宽度
 		excelUtils.exportExcel(workbook, savaPath + File.separator + "备用资金反馈表.xls");// 生成Excel
 	}
 
@@ -196,6 +197,10 @@ public class ReportServiceborr implements ReportServiceInterface {
 					subtotal[0] += borr.getOriginalCurrency();// 累计原币
 					subtotal[1] += borr.getVerification();// 累计已核销
 					subtotal[2] += borr.getOriginalCurrencyBalance();// 累计原币余额
+
+					if (borr.getPurpose() != null && borr.getPurpose().length() > purposeColLength) {// 记录借款用途最长字符串长度
+						purposeColLength = borr.getPurpose().length();
+					}
 
 					_rid++;
 				}

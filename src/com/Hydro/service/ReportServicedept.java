@@ -31,6 +31,8 @@ public class ReportServicedept implements ReportServiceInterface {
 	public double[] total = { 0.0, 0.0, 0.0 };
 	public CellStyle cellStyle;
 	public ExcelUtils excelUtils;
+	int purposeColLength = 0;// 中文列字符串长度
+	int deptColLength = 0;// 中文列字符串长度
 
 	/**
 	 * 读取Excel
@@ -176,9 +178,18 @@ public class ReportServicedept implements ReportServiceInterface {
 			}
 			// 自动调节每列宽度
 			for (int i = 0; i < 10; i++) {
-				sheet.autoSizeColumn(i);
+				sheet.autoSizeColumn((short) i);
 			}
+			if (deptid != null && deptid.length() > deptColLength) {
+				deptColLength = deptid.length();
+
+			}
+			sheet.setColumnWidth(1, deptColLength * 2 * 256);// 设置部门/日期列宽度
+			sheet.setColumnWidth(2, purposeColLength * 2 * 256);// 设置借款用途列宽度
+
 			excelUtils.exportExcel(workbook, savaPath + File.separator + deptid + ".xls");// 生成Excel
+			deptColLength = 0;
+			purposeColLength = 0;
 		}
 	}
 
@@ -224,7 +235,6 @@ public class ReportServicedept implements ReportServiceInterface {
 		}
 		cell.setCellStyle(cellStyle.cellFontBoldCenterBorderStyle);
 		_rid++;
-
 		// 上面代码可注释
 
 		for (int i = 0; i < list.size(); i++) {// 遍历每个部门下的借款信息集合
@@ -248,6 +258,13 @@ public class ReportServicedept implements ReportServiceInterface {
 					subtotal[0] += borr.getOriginalCurrency();// 累计原币
 					subtotal[1] += borr.getVerification();// 累计已核销
 					subtotal[2] += borr.getOriginalCurrencyBalance();// 累计原币余额
+
+					if (borr.getBorrDate() != null && borr.getBorrDate().length() > deptColLength) {// 记录日期列最长字符串长度
+						deptColLength = borr.getBorrDate().length();
+					}
+					if (borr.getPurpose() != null && borr.getPurpose().length() > purposeColLength) {// 记录借款用途最长字符串长度
+						purposeColLength = borr.getPurpose().length();
+					}
 
 					_rid++;
 				}
