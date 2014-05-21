@@ -34,7 +34,7 @@ public class ReportServiceBorr implements ReportServiceInterface {
 	@Override
 	public void readExcel(String fname) throws Exception {
 		try {
-			System.out.println(fname);
+			System.out.println("读取源文件：" + fname);
 			HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream(fname));
 			HSSFSheet sheet = workbook.getSheetAt(0);// 取Excel第一个sheet表
 			Iterator<Row> rows = sheet.rowIterator();// 行迭代器

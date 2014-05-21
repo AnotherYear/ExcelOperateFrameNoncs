@@ -151,10 +151,10 @@ public class JFramePage extends JFrame {
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fileChooser.setDialogTitle("打开文件夹");
 		int ret = fileChooser.showOpenDialog(null);
-		final String filePath = fileChooser.getSelectedFile().getAbsolutePath();
 		if (ret == JFileChooser.APPROVE_OPTION) {
+			final String filePath = fileChooser.getSelectedFile().getAbsolutePath();
 			// 文件夹路径
-			System.out.println(fileChooser.getSelectedFile().getAbsolutePath());
+			System.out.println("报表生成路径：" + fileChooser.getSelectedFile().getAbsolutePath());
 			Thread t = new Thread() {
 				public void run() {
 					boolean flag = true;
@@ -182,10 +182,10 @@ public class JFramePage extends JFrame {
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fileChooser.setDialogTitle("打开文件夹");
 		int ret = fileChooser.showOpenDialog(null);
-		final String filePath = fileChooser.getSelectedFile().getAbsolutePath();
 		if (ret == JFileChooser.APPROVE_OPTION) {
+			final String filePath = fileChooser.getSelectedFile().getAbsolutePath();
 			// 文件夹路径
-			System.out.println(fileChooser.getSelectedFile().getAbsolutePath());
+			System.out.println("报表生成路径：" + fileChooser.getSelectedFile().getAbsolutePath());
 			Thread t = new Thread() {
 				public void run() {
 					boolean flag = true;
