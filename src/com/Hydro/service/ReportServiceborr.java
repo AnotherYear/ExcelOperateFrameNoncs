@@ -13,7 +13,6 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.CellRangeAddress;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 
 import com.Hydro.model.Borrower;
@@ -34,10 +33,8 @@ public class ReportServiceborr implements ReportServiceInterface {
 
 	@Override
 	public void readExcel(String fname) throws Exception {
-		// TODO 自动生成的方法存根
-		Object co = null;
 		try {
-			System.out.println(path + File.separator + fname);
+			System.out.println(fname);
 			HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream(fname));
 			HSSFSheet sheet = workbook.getSheetAt(0);// 取Excel第一个sheet表
 			Iterator<Row> rows = sheet.rowIterator();// 行迭代器
@@ -46,55 +43,49 @@ public class ReportServiceborr implements ReportServiceInterface {
 			while (rows.hasNext()) {// 判断是否存在下一行
 				HSSFRow row = (HSSFRow) rows.next();// 获得下一行。
 				if (row_i >= 5) {// 从第6行开始读
-					Iterator<Cell> cells = row.cellIterator();// 单元格迭代器
-					int cell_i = 0;
 					Borrower borrower = new Borrower();
-					while (cells.hasNext()) {// 判断是否存在下一单元格
-						HSSFCell cell = (HSSFCell) cells.next();// //获得下一单元格。
-						try {
-							co = excelUtils.getCellValue(cell);// 获取单元格的值
+					try {
+						Object co = (String) excelUtils.getCellValue(row.getCell(0));
+						if (excelUtils.getCellValue(row.getCell(0)) != null) {
 							if (co instanceof String) {// 当单元格的值是String类型并且含有"制表人"字段时，则认为到达最后一行，迭代退出。
 								if (((String) co).indexOf("制表人") != -1) {
 									break;
 								}
 							}
-							if (cell_i == 1) {
-								borrower.setBorrId((String) co);
-							}
-							if (cell_i == 2) {
-								borrower.setDeptId((String) co);
-							}
-							if (cell_i == 5) {
-								borrower.setBorrDate((String) co);
-							}
-							if (cell_i == 7) {
-								borrower.setPurpose((String) co);
-							}
-							if (cell_i == 9) {
-								if (co == null) {
-									co = 0.0;
-								}
-								borrower.setOriginalCurrency((Double) co);
-							}
-							if (cell_i == 10) {
-								if (co == null) {
-									co = 0.0;
-								}
-								borrower.setOriginalCurrencyBalance((Double) co);
-							}
-							if (cell_i == 11) {
-								if (co == null) {
-									co = 0.0;
-								}
-								borrower.setAging((Double) co);
-							}
-						} catch (Exception e) {
-							e.printStackTrace();
 						}
-						cell_i++;
+						borrower.setBorrId((String) excelUtils.getCellValue(row.getCell(1)));
+						String deptid = (String) excelUtils.getCellValue(row.getCell(2));
+						if (deptid != null && deptid.indexOf("/") != -1) {
+							deptid = deptid.replaceAll("/", "&");
+						}
+						borrower.setDeptId(deptid);
+
+						borrower.setBorrDate((String) excelUtils.getCellValue(row.getCell(5)));
+
+						borrower.setPurpose((String) excelUtils.getCellValue(row.getCell(7)));
+
+						if (excelUtils.getCellValue(row.getCell(9)) == null) {
+							borrower.setOriginalCurrency(0.0);
+						} else {
+							borrower.setOriginalCurrency((Double) excelUtils.getCellValue(row.getCell(9)));
+						}
+
+						if (excelUtils.getCellValue(row.getCell(10)) == null) {
+							borrower.setOriginalCurrencyBalance(0.0);
+						} else {
+							borrower.setOriginalCurrencyBalance((Double) excelUtils.getCellValue(row.getCell(10)));
+						}
+
+						if (excelUtils.getCellValue(row.getCell(11)) == null) {
+							borrower.setAging(0.0);
+						} else {
+							borrower.setAging((Double) excelUtils.getCellValue(row.getCell(11)));
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
 					borrower.setVerification(borrower.getOriginalCurrency() - borrower.getOriginalCurrencyBalance());// 已核销=原币-原币余额
-					if (!"小计".equals(borrower.getPurpose())) {
+					if (borrower != null && borrower.getBorrId() != null && !"".equals(borrower.getBorrId()) && borrower.getPurpose() != null && borrower.getPurpose().indexOf("小计") == -1) {
 						borrList.add(borrower);
 					}
 				}
@@ -108,7 +99,6 @@ public class ReportServiceborr implements ReportServiceInterface {
 	@SuppressWarnings("unused")
 	@Override
 	public void produceExcel(String fname, String savaPath) throws Exception {
-		// TODO 自动生成的方法存根
 		HSSFWorkbook workbook = new HSSFWorkbook(new FileInputStream(fname));// 创建一个Excel表对象
 		cellStyle = new CellStyle(workbook);
 		excelUtils = new ExcelUtils();
@@ -128,7 +118,6 @@ public class ReportServiceborr implements ReportServiceInterface {
 		for (int i = 0; i < 10; i++) {
 			sheet.autoSizeColumn(i);
 		}
-
 		excelUtils.exportExcel(workbook, savaPath + File.separator + "备用资金反馈表.xls");// 生成Excel
 	}
 
@@ -147,16 +136,16 @@ public class ReportServiceborr implements ReportServiceInterface {
 			try {
 				switch (k) {
 				case 3:
-					excelUtils.setCellValue(subtotal[0], workbook, k, row, cellStyle.cellBorderStyle);// 原币
+					excelUtils.setCellValue(subtotal[0], workbook, k, row, cellStyle.cellFontBoldBorderStyle);// 原币
 					break;
 				case 4:
-					excelUtils.setCellValue(subtotal[1], workbook, k, row, cellStyle.cellBorderStyle);// 原币
+					excelUtils.setCellValue(subtotal[1], workbook, k, row, cellStyle.cellFontBoldBorderStyle);// 原币
 					break;
 				case 5:
-					excelUtils.setCellValue(subtotal[2], workbook, k, row, cellStyle.cellBorderStyle);// 原币
+					excelUtils.setCellValue(subtotal[2], workbook, k, row, cellStyle.cellFontBoldBorderStyle);// 原币
 					break;
 				default:
-					excelUtils.setCellValue(null, workbook, k, row, cellStyle.cellBorderStyle);// 其它赋空
+					excelUtils.setCellValue(null, workbook, k, row, cellStyle.cellFontBoldBorderStyle);// 其它赋空
 					break;
 				}
 			} catch (Exception e) {
@@ -189,7 +178,7 @@ public class ReportServiceborr implements ReportServiceInterface {
 		for (int i = 0; i < list.size(); i++) {// 借款信息集合
 			try {
 				Borrower borr = (Borrower) list.get(i);// 获取每一条借款信息
-				if (borr.getAging() != 0 && (borr.getAging() >= start && borr.getAging() < end)) {
+				if (borr.getAging() >= start && borr.getAging() < end) {
 					System.out.println(borr);
 					row = sheet.createRow(_rid);
 					int j = 0;
