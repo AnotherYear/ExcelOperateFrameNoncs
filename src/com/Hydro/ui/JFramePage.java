@@ -14,8 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import com.Hydro.service.ReportServiceborr;
-import com.Hydro.service.ReportServicedept;
+import com.Hydro.service.ReportServiceBorr;
+import com.Hydro.service.ReportServiceDept;
 
 /**
  * Excel操作界面
@@ -160,7 +160,7 @@ public class JFramePage extends JFrame {
 					boolean flag = true;
 					try {
 
-						ReportServicedept app = new ReportServicedept();
+						ReportServiceDept app = new ReportServiceDept();
 						app.readExcel(jfPath);
 						app.produceExcel(templetPath, filePath);// 生成Excel，必须为.xls格式的Excel
 						System.out.println("");
@@ -191,7 +191,7 @@ public class JFramePage extends JFrame {
 					boolean flag = true;
 					try {
 
-						ReportServiceborr app = new ReportServiceborr();
+						ReportServiceBorr app = new ReportServiceBorr();
 						app.readExcel(jfPath);
 						app.produceExcel(templetPath, filePath);// 生成Excel，必须为.xls格式的Excel
 						System.out.println("");
